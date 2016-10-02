@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, redirect, url_for, request, flash
 from flask import make_response, session, abort
-from flask.ext.wtf.csrf import generate_csrf, validate_csrf
+from flask_wtf.csrf import generate_csrf, validate_csrf
 from silopub import micropub
 from silopub import util
 from silopub.ext import db
@@ -167,8 +167,13 @@ def publish(site):
     title = request.form.get('name')
     content = request.form.get('content[value]') or request.form.get('content')
     permalink = request.form.get('url')
-    photo_file = request.files.get('photo') or request.files.get('photo[]')
-    video_file = request.files.get('video') or request.files.get('video[]')
+
+    photo_file = util.get_first(util.get_possible_array_value(request.files, 'photo'))
+    photo_url = util.get_first(util.get_possible_array_value(request.form, 'photo'))
+
+    video_file = util.get_first(util.get_possible_array_value(request.files, 'video'))
+    video_url = util.get_first(util.get_possible_array_value(request.form, 'video'))
+
     location = request.form.get('location')
 
     post_data = {'access_token': site.account.token}
@@ -181,15 +186,21 @@ def publish(site):
         '({})'.format(permalink) if not content else
         '{} ({})'.format(content, permalink))
 
-    if video_file:
-        post_files = {'source': (video_file.filename, video_file.stream,
-                                 video_file.content_type or 'video/mp4')}
+    if video_file or video_url:
+        if video_file:
+            post_files = {'source': (video_file.filename, video_file.stream,
+                                     video_file.content_type or 'video/mp4')}
+        elif video_url:
+            post_data['url'] = video_url
         post_data['title'] = title
         post_data['description'] = message
         api_endpoint = 'https://graph-video.facebook.com/v2.5/me/videos'
         fburl_separator = 'videos'
-    elif photo_file:
-        post_files = {'source': photo_file}
+    elif photo_file or photo_url:
+        if photo_file:
+            post_files = {'source': photo_file}
+        elif photo_url:
+            post_data['url'] = photo_url
         post_data['caption'] = message
         # TODO support album id as alternative to 'me'
         # TODO upload to "Timeline photos" album by default

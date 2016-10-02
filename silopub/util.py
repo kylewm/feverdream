@@ -1,13 +1,20 @@
 import datetime
 import random
 import re
+import tempfile
 import urllib.parse
 
 from flask import flash, current_app, make_response, url_for, jsonify, session
 from flask import request
 from requests.exceptions import HTTPError, SSLError
+from werkzeug.datastructures import FileStorage
 import jwt
 import mf2py
+import requests
+
+
+def get_first(arr, default_value=None):
+    return arr[0] if arr else default_value
 
 
 def looks_like_a_url(text):
@@ -232,6 +239,26 @@ def get_possible_array_value(args, key):
     if key in args:
         return [args.get(key)]
     return args.getlist(key + '[]')
+
+
+def url_to_file_storage(url):
+    """Open a URL as a stream, and wrap it in a
+    werkzeug.datastructures.FileStorage as if it were being uploaded via POST.
+    """
+    r = requests.get(url, stream=True)
+    filename = r.url.split('/')[-1]
+    content_type = r.headers.get('Content-Type', 'application/octet-stream')
+    return FileStorage(stream=r.raw, filename=filename, content_type=content_type)
+
+
+def get_files_or_urls_as_file_storage(file_dict, form_dict, key):
+    """Get a multi-valued property (like "photo") as either
+    uploaded files, or URL values. Returns a list of werkzeug.datastructures.FileStorage
+    objects.
+    """
+    file_values = get_possible_array_value(file_dict, key)
+    url_values = get_possible_array_value(form_dict, key)
+    return file_values + [url_to_file_storage(url) for url in url_values]
 
 
 def parse_geo_uri(uri):

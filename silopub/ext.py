@@ -1,6 +1,6 @@
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.wtf import CsrfProtect
-from flask.ext.session import Session
+from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import CsrfProtect
+from flask_session import Session
 from redis import StrictRedis
 
 

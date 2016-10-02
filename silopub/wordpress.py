@@ -1,6 +1,6 @@
 from flask import (Blueprint, url_for, make_response, current_app, request,
                    redirect, flash, abort)
-from flask.ext.wtf.csrf import generate_csrf, validate_csrf
+from flask_wtf.csrf import generate_csrf, validate_csrf
 import requests
 import urllib.parse
 from silopub.models import Account, Wordpress
@@ -172,18 +172,22 @@ def publish(site):
     }
 
     files = None
-    photo_file = request.files.get('photo') or request.files.get('photo[]')
-    if photo_file:
-        # TODO support multiple files
+    photo_files = util.get_possible_array_value(request.files, 'photo')
+    photo_urls = util.get_possible_array_value(request.form, 'photo')
+    if photo_files or photo_urls:
         data['format'] = 'image'
-        files = {
-            'media[0]': (os.path.basename(photo_file.filename), photo_file),
-        }
+        if photo_files:
+            files = {
+                'media[]': [(os.path.basename(photo_file.filename), photo_file)
+                            for photo_file in photo_files],
+            }
+        if photo_urls:
+            data['media_urls[]'] = photo_urls
 
     req = requests.Request('POST', new_post_url, data=util.trim_nulls(data),
                            files=files, headers={
                                'Authorization': 'Bearer ' + site.token,
-    })
+                           })
 
     req = req.prepare()
     s = requests.Session()

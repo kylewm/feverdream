@@ -120,8 +120,21 @@ def publish(site):
     type = request.form.get('h')
 
     create_post_url = CREATE_POST_URL.format(site.domain)
-    photo_file = request.files.get('photo') or request.files.get('photo[]')
-    if photo_file:
+    photo_url = util.get_first(util.get_possible_array_value(request.form, 'photo'))
+    photo_file = util.get_first(util.get_possible_array_value(request.files, 'photo'))
+
+    if photo_url:
+        data = util.trim_nulls({
+            'type': 'photo',
+            'slug': request.form.get('slug'),
+            'caption': request.form.get('content[html]')
+            or request.form.get('content') or request.form.get('name')
+            or request.form.get('summary'),
+            'source': photo_url
+        })
+        r = requests.post(create_post_url, data=data, auth=auth)
+
+    elif photo_file:
         # tumblr signs multipart in a weird way. first sign the request as if
         # it's application/x-www-form-urlencoded, then recreate the request as
         # multipart but use the signed headers from before. Mostly cribbed from

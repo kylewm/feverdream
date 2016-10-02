@@ -306,13 +306,13 @@ def publish(site):
             content = 'Liked: {}'.format(like_ofs[0])
 
     media_ids = []
-    for photo in util.get_possible_array_value(request.files, 'photo'):
+    for photo in util.get_files_or_urls_as_file_storage(request.files, request.form, 'photo'):
         media_id, err = upload_photo(photo)
         if err:
             return util.wrap_silo_error_response(err)
         media_ids.append(media_id)
 
-    for video in util.get_possible_array_value(request.files, 'video'):
+    for video in util.get_files_or_urls_as_file_storage(request.files, request.form, 'video'):
         media_id, err = upload_video(video)
         if err:
             return util.wrap_silo_error_response(err)

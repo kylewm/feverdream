@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, url_for, request, current_app
 from flask import abort
-from flask.ext.wtf.csrf import generate_csrf, validate_csrf
+from flask_wtf.csrf import generate_csrf, validate_csrf
 import requests
 import html
 import sys
