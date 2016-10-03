@@ -70,6 +70,7 @@ def test_process_callback(app, mocker):
     fetch_access_token.assert_called_once_with(
         twitter.ACCESS_TOKEN_URL)
 
+
 def test_proxy_homepage(app, client):
     r = client.get('/twitter.com/fakeuser')
     rtext = r.get_data(as_text=True)
@@ -183,6 +184,7 @@ def test_publish_media(app, site, mocker):
             'media_ids': '2112',
         }, auth=mocker.ANY)
     ])
+
 
 def test_publish_reply(site, mocker):
     poster = mocker.patch('requests.post')

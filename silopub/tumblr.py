@@ -125,9 +125,9 @@ def publish(site):
         data = util.trim_nulls({
             'type': 'photo',
             'slug': request.form.get('slug'),
-            'caption': request.form.get('content[html]')
-            or request.form.get('content') or request.form.get('name')
-            or request.form.get('summary'),
+            'caption': request.form.get('content[html]') or
+            request.form.get('content') or request.form.get('name') or
+            request.form.get('summary'),
             'source': photo_url
         })
         r = requests.post(create_post_url, data=data, auth=auth)

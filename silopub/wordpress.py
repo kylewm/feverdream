@@ -184,8 +184,8 @@ def publish(site):
 
     req = requests.Request('POST', new_post_url, data=util.trim_nulls(data),
                            files=files, headers={
-                               'Authorization': 'Bearer ' + site.token,
-                           })
+        'Authorization': 'Bearer ' + site.token
+    })
 
     req = req.prepare()
     s = requests.Session()

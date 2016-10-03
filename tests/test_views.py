@@ -1,8 +1,5 @@
 from silopub.testutil import FakeSite, FAKE_SERVICE_NAME, assertUrlsMatch
-from unittest import TestCase
-from unittest.mock import MagicMock, Mock
-from flask import current_app
-from silopub.models import Account, Site
+from silopub.models import Account
 from urllib.parse import urlencode
 import re
 

@@ -1,7 +1,6 @@
 import datetime
 import random
 import re
-import tempfile
 import urllib.parse
 
 from flask import flash, current_app, make_response, url_for, jsonify, session

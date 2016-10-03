@@ -2,9 +2,8 @@ import sys
 import os
 import pytest
 
-sys.path.append(os.path.join(os.path.dirname(__file__),  '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-import json
 import silopub  # NOQA
 
 
