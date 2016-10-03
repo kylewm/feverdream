@@ -6,6 +6,7 @@ import datetime
 import binascii
 import os
 
+
 class JsonType(db.TypeDecorator):
     """Represents an immutable structure as a json-encoded string.
     http://docs.sqlalchemy.org/en/rel_0_9/core/types.html#marshal-json-strings

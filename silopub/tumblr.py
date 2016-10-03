@@ -2,7 +2,7 @@ from silopub import util
 from silopub.ext import db
 from silopub.models import Account, Tumblr
 from flask import Blueprint, current_app, redirect, url_for, request, flash
-from flask import make_response, session
+from flask import session
 from requests_oauthlib import OAuth1Session, OAuth1
 import html
 import requests
@@ -117,8 +117,6 @@ def publish(site):
         resource_owner_key=site.account.token,
         resource_owner_secret=site.account.token_secret)
 
-    type = request.form.get('h')
-
     create_post_url = CREATE_POST_URL.format(site.domain)
     photo_url = util.get_first(util.get_possible_array_value(request.form, 'photo'))
     photo_file = util.get_first(util.get_possible_array_value(request.files, 'photo'))
@@ -149,9 +147,9 @@ def publish(site):
         data = util.trim_nulls({
             'type': 'photo',
             'slug': request.form.get('slug'),
-            'caption': request.form.get('content[html]')
-            or request.form.get('content') or request.form.get('name')
-            or request.form.get('summary'),
+            'caption': request.form.get('content[html]') or
+            request.form.get('content') or request.form.get('name') or
+            request.form.get('summary'),
         })
         fake_req = requests.Request('POST', create_post_url, data=data)
         fake_req = fake_req.prepare()

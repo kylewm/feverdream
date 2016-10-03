@@ -1,15 +1,13 @@
 import html
 import requests
 import sys
-import json
 import re
 import urllib.parse
 
 from flask import Blueprint, current_app, redirect, url_for, request, flash
-from flask import make_response, session, abort
+from flask import session, abort
 from requests_oauthlib import OAuth1Session, OAuth1
 from silopub import util
-from silopub import micropub
 from silopub.ext import db
 from silopub.models import Account, Flickr
 from oauthlib.oauth1 import SIGNATURE_TYPE_BODY
@@ -160,8 +158,8 @@ def call_api_method(http_method, flickr_method, params,
         client_key=current_app.config['FLICKR_CLIENT_KEY'],
         client_secret=current_app.config['FLICKR_CLIENT_SECRET'],
         resource_owner_key=token or site.token or site.account.token,
-        resource_owner_secret=secret or site.token_secret
-        or site.account.token_secret)
+        resource_owner_secret=secret or site.token_secret or
+        site.account.token_secret)
 
     full_params = {
         'nojsoncallback': 1,
@@ -178,8 +176,8 @@ def upload(params, photo_file, token=None, secret=None, site=None):
         client_key=current_app.config['FLICKR_CLIENT_KEY'],
         client_secret=current_app.config['FLICKR_CLIENT_SECRET'],
         resource_owner_key=token or site.token or site.account.token,
-        resource_owner_secret=secret or site.token_secret
-        or site.account.token_secret,
+        resource_owner_secret=secret or site.token_secret or
+        site.account.token_secret,
         signature_type=SIGNATURE_TYPE_BODY)
 
     # create a request without files for signing
@@ -235,8 +233,8 @@ def publish(site):
         return None, None
 
     def get_path_alias():
-        return (site.account.user_info.get('person', {}).get('path_alias')
-                or site.account.user_id)
+        return (site.account.user_info.get('person', {}).get('path_alias') or
+                site.account.user_id)
 
     in_reply_to = request.form.get('in-reply-to')
     like_of = request.form.get('like-of')
@@ -289,7 +287,7 @@ def publish(site):
                site=site)
 
     if r.status_code // 100 != 2:
-      return util.wrap_silo_error_response(r)
+        return util.wrap_silo_error_response(r)
 
     photo_id, error = interpret_upload_response(r)
     if error:

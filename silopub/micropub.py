@@ -1,12 +1,11 @@
 from silopub import util
-from silopub.ext import csrf, redis, db
-from silopub.models import Site, Account, Token
+from silopub.ext import csrf, redis
+from silopub.models import Site, Token
 from flask import Blueprint, redirect, url_for, current_app, request, abort
-from flask import jsonify, session, make_response
+from flask import session, make_response
 import datetime
 import json
 import sys
-import uuid
 import binascii
 import os
 import urllib
@@ -52,6 +51,7 @@ def guess_service(me):
             service = 'goodreads'
 
     return service and SERVICES[service]
+
 
 @csrf.exempt
 @micropub.route('/indieauth', methods=['GET', 'POST'])

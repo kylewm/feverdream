@@ -7,7 +7,7 @@ import tempfile
 import urllib.parse
 
 from flask import Blueprint, current_app, redirect, url_for, request, flash
-from flask import session, abort
+from flask import session
 from requests_oauthlib import OAuth1Session, OAuth1
 from silopub import util
 from silopub.ext import db
@@ -21,7 +21,7 @@ ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token'
 VERIFY_CREDENTIALS_URL = 'https://api.twitter.com/1.1/account/verify_credentials.json'
 CREATE_STATUS_URL = 'https://api.twitter.com/1.1/statuses/update.json'
 
-#CREATE_WITH_MEDIA_URL = 'https://api.twitter.com/1.1/statuses/update_with_media.json'
+# CREATE_WITH_MEDIA_URL = 'https://api.twitter.com/1.1/statuses/update_with_media.json'
 UPLOAD_MEDIA_URL = 'https://upload.twitter.com/1.1/media/upload.json'
 RETWEET_STATUS_URL = 'https://api.twitter.com/1.1/statuses/retweet/{}.json'
 FAVE_STATUS_URL = 'https://api.twitter.com/1.1/favorites/create.json'
@@ -323,8 +323,8 @@ def publish(site):
         twitterer, tweet_id = get_tweet_id(in_reply_to)
         if tweet_id:
             data['in_reply_to_status_id'] = tweet_id
-            if (twitterer != site.account.username
-                    and '@' + twitterer.lower() not in content.lower()):
+            if (twitterer != site.account.username and
+                    '@' + twitterer.lower() not in content.lower()):
                 content = '@{} {}'.format(twitterer, content)
             break
     else:

@@ -1,5 +1,4 @@
-from flask import (Blueprint, url_for, make_response, current_app, request,
-                   redirect, flash, abort)
+from flask import Blueprint, url_for, current_app, request, redirect, flash
 from flask_wtf.csrf import generate_csrf, validate_csrf
 import requests
 import urllib.parse
@@ -74,7 +73,7 @@ def process_callback(callback_uri):
     csrf = request.args.get('state', '')
 
     if error:
-        return {'error':  'Wordpress authorization canceled or failed with '
+        return {'error': 'Wordpress authorization canceled or failed with '
                 'error: {}, and description: {}'.format(error, error_desc)}
 
     if not validate_csrf(csrf):
@@ -161,7 +160,6 @@ def process_callback(callback_uri):
 
 
 def publish(site):
-    type = request.form.get('h')
     new_post_url = API_NEW_POST_URL.format(site.site_id)
 
     data = {

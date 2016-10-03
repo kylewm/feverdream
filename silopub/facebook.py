@@ -1,15 +1,11 @@
 from flask import Blueprint, current_app, redirect, url_for, request, flash
-from flask import make_response, session, abort
 from flask_wtf.csrf import generate_csrf, validate_csrf
-from silopub import micropub
 from silopub import util
 from silopub.ext import db
-from silopub.models import Account, Site, Facebook
+from silopub.models import Account, Facebook
 from urllib.parse import urlencode, parse_qs
 import brevity
 import html
-import json
-import re
 import requests
 import sys
 
@@ -230,8 +226,8 @@ def publish(site):
         if location.isnumeric():
             post_data['place'] = location
         else:
-            place_name = (request.form.get('place-name')
-                          or request.form.get('place_name'))
+            place_name = (request.form.get('place-name') or
+                          request.form.get('place_name'))
             lat, lng = util.parse_geo_uri(location)
             if lat and lng:
                 current_app.logger.debug('Search FB for a place, %s at %s, %s',

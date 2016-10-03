@@ -2,7 +2,6 @@ from silopub import util
 from silopub.ext import db
 from silopub.models import Account, Blogger
 from flask import Blueprint, url_for, current_app, request, redirect, flash
-from flask import make_response
 from flask_wtf.csrf import generate_csrf, validate_csrf
 import datetime
 import json
@@ -145,8 +144,8 @@ def process_callback(redirect_uri):
 
 
 def maybe_refresh_access_token(account):
-    if (account.refresh_token and account.expiry
-            and account.expiry <= datetime.datetime.utcnow()):
+    if (account.refresh_token and account.expiry and
+            account.expiry <= datetime.datetime.utcnow()):
         current_app.logger.info(
             'refreshing access token for %s', account.username)
 
@@ -220,10 +219,7 @@ def publish(site):
     }
     """
     maybe_refresh_access_token(site.account)
-
-    type = request.form.get('h')
     create_post_url = API_CREATE_POST_URL.format(site.site_id)
-
     current_app.logger.info('posting to blogger %s', create_post_url)
 
     post_data = util.trim_nulls({

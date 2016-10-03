@@ -1,19 +1,14 @@
 import html
-import itertools
-import json
-import os
 import re
 import requests
 import sys
-import tempfile
 import urllib.parse
 import xml.etree.ElementTree as ETree
 
 from flask import Blueprint, current_app, redirect, url_for, request, flash
-from flask import make_response, session, abort, jsonify
+from flask import session
 from requests_oauthlib import OAuth1Session, OAuth1
 from silopub import util
-from silopub import micropub
 from silopub.ext import db
 from silopub.models import Account, Goodreads
 

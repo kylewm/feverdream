@@ -10,10 +10,9 @@ from silopub import github
 from silopub import goodreads
 from silopub import micropub
 from silopub import ext
-from silopub.models import *
+from silopub.models import *  # NOQA
 import logging
 import logging.handlers
-import os
 import sys
 
 MAIL_FORMAT = '''\

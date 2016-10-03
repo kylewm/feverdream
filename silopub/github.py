@@ -1,5 +1,4 @@
 from flask import Blueprint, flash, redirect, url_for, request, current_app
-from flask import abort
 from flask_wtf.csrf import generate_csrf, validate_csrf
 import requests
 import html
@@ -157,10 +156,10 @@ def publish(site):
     if in_reply_to:
         in_reply_to = util.posse_post_discovery(in_reply_to, BASE_PATTERN)
 
-        repo_match = (re.match(REPO_PATTERN, in_reply_to)
-                      or re.match(ISSUES_PATTERN, in_reply_to))
-        issue_match = (re.match(ISSUE_PATTERN, in_reply_to)
-                       or re.match(PULL_PATTERN, in_reply_to))
+        repo_match = (re.match(REPO_PATTERN, in_reply_to) or
+                      re.match(ISSUES_PATTERN, in_reply_to))
+        issue_match = (re.match(ISSUE_PATTERN, in_reply_to) or
+                       re.match(PULL_PATTERN, in_reply_to))
 
         # reply to a repository -- post a new issue
         if repo_match:
@@ -168,9 +167,9 @@ def publish(site):
                 repo_match.group(1), repo_match.group(2))
 
             title = request.form.get('name')
-            body = (request.form.get('content[markdown]')
-                    or request.form.get('content[value]')
-                    or request.form.get('content') or '')
+            body = (request.form.get('content[markdown]') or
+                    request.form.get('content[value]') or
+                    request.form.get('content') or '')
 
             if not title and body:
                 title = body[:49] + '\u2026'
@@ -184,9 +183,9 @@ def publish(site):
         elif issue_match:
             endpoint = 'https://api.github.com/repos/{}/{}/issues/{}/comments'.format(
                 issue_match.group(1), issue_match.group(2), issue_match.group(3))
-            body = (request.form.get('content[markdown]')
-                    or request.form.get('content[value]')
-                    or request.form.get('content') or '')
+            body = (request.form.get('content[markdown]') or
+                    request.form.get('content[value]') or
+                    request.form.get('content') or '')
             data = {'body': body}
         else:
             return util.make_publish_error_response(
