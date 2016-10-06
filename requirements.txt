@@ -3,7 +3,7 @@ brevity==0.2.11
 Flask==0.11.1
 Flask-Session==0.3.0
 Flask-SQLAlchemy==2.1
-Flask-WTF==0.13
+Flask-WTF==0.13.1
 flake8==3.0.4
 html5lib==0.999999999
 itsdangerous==0.24
