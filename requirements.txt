@@ -3,7 +3,7 @@ brevity==0.2.11
 Flask==0.11.1
 Flask-Session==0.3.0
 Flask-SQLAlchemy==2.1
-Flask-WTF==0.12
+Flask-WTF==0.13.1
 flake8==3.0.4
 html5lib==0.999999999
 itsdangerous==0.24
@@ -16,8 +16,8 @@ redis==2.10.5
 requests==2.11.1
 requests-oauthlib==0.7.0
 six==1.10.0
-SQLAlchemy==1.0.15
-uWSGI==2.0.13.1
+SQLAlchemy==1.1.2
+uWSGI==2.0.14
 Werkzeug==0.11.11
 wheel==0.29.0
 WTForms==2.1
