@@ -8,6 +8,7 @@ import brevity
 import html
 import requests
 import sys
+import json
 
 SERVICE_NAME = 'facebook'
 PERMISSION_SCOPES = 'publish_actions,user_videos'
@@ -103,9 +104,10 @@ def process_callback(callback_uri):
         return {'error': 'Error ({}) requesting access token: {}, '
                 'description: {}' .format(r.status_code, error, error_desc)}
 
-    payload = parse_qs(r.text)
+    payload = json.loads(r.text)
     current_app.logger.debug('auth responses from Facebook %s', payload)
-    access_token = payload['access_token'][0]
+    current_app.logger.debug('raw response %s', r.text)
+    access_token = payload['access_token']
 
     r = requests.get('https://graph.facebook.com/v2.5/me', params={
         'access_token': access_token,
