@@ -341,7 +341,7 @@ def publish(site):
 
     if content:
         data['status'] = brevity.shorten(content, permalink=permalink_url,
-                                         format=format)
+                                         format=format, target_length=280)
     data = util.trim_nulls(data)
     current_app.logger.debug('publishing with params %s', data)
     return interpret_response(
