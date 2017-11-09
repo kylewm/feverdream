@@ -342,6 +342,11 @@ def publish(site):
     if content:
         data['status'] = brevity.shorten(content, permalink=permalink_url,
                                          format=format, target_length=280)
+
+    # for in-reply-to tweets, leading @mentions will be looked up from the original Tweet, and added to the new Tweet from there.
+    # https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
+    data['auto_populate_reply_metadata'] = 'true'
+
     data = util.trim_nulls(data)
     current_app.logger.debug('publishing with params %s', data)
     return interpret_response(
