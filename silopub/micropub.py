@@ -61,7 +61,6 @@ def indieauth():
         code = request.form.get('code')
         client_id = request.form.get('client_id')
         redirect_uri = request.form.get('redirect_uri')
-        state = request.form.get('state', '')
 
         datastr = redis.get('indieauth-code:{}'.format(code))
         if not datastr:
@@ -71,7 +70,7 @@ def indieauth():
 
         data = json.loads(datastr.decode('utf-8'))
         for key, value in [('client_id', client_id),
-                           ('redirect_uri', redirect_uri), ('state', state)]:
+                           ('redirect_uri', redirect_uri)]:
             if data.get(key) != value:
                 current_app.logger.warn(
                     '%s mismatch. expected=%s, received=%s',
@@ -193,7 +192,6 @@ def token_endpoint():
     me = request.form.get('me')
     redirect_uri = request.form.get('redirect_uri')
     client_id = request.form.get('client_id')
-    state = request.form.get('state', '')
 
     datastr = redis.get('indieauth-code:{}'.format(code))
     if not datastr:
@@ -203,7 +201,7 @@ def token_endpoint():
 
     data = json.loads(datastr.decode('utf-8'))
     for key, value in [('me', me), ('client_id', client_id),
-                       ('redirect_uri', redirect_uri), ('state', state)]:
+                       ('redirect_uri', redirect_uri)]:
         if data.get(key) != value:
             current_app.logger.warn('%s mismatch. expected=%s, received=%s',
                                     key, data.get(key), value)
